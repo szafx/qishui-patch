@@ -1,0 +1,32 @@
+name: build-tweak
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Theos
+        run: |
+          brew install ldid xz
+          git clone --recursive https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          curl -L https://github.com/theos/sdks/releases/latest/download/iPhoneOS16.5.sdk.tar.xz -o /tmp/sdk.tar.xz
+          mkdir -p $HOME/theos/sdks
+          tar -xf /tmp/sdk.tar.xz -C $HOME/theos/sdks
+
+      - name: Build
+        run: |
+          export PATH=$HOME/theos/bin:$PATH
+          make package FINALPACKAGE=1
+
+      - name: Upload deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: qishui-patch-deb
+          path: packages/*.deb

@@ -1,0 +1,9 @@
+Package: com.lcs.qishuipatch
+Name: QishuiPatch
+Version: 1.0.0
+Architecture: iphoneos-arm64
+Description: 汽水音乐 音质/播放权限补丁
+Maintainer: lcs
+Author: lcs
+Section: Tweaks
+Depends: mobilesubstrate
